@@ -52,12 +52,12 @@ COLOUR_END=\033[0m
 ## Help Setup            ##
 ###########################
 .DEFAULT_GOAL := help
-.PHONY: help
+.PHONY: help oci oci-proxy oci-cleanup oci-update
 help:
 	@echo -e "$(COLOUR_GREEN)---------------------------$(COLOUR_END)"
 	@echo -e "$(COLOUR_GREEN) Make Commands for oci-cli $(COLOUR_END)"
 	@echo -e "$(COLOUR_GREEN)---------------------------$(COLOUR_END)"
-	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	| sed -n 's/^\(.*\): \(.*\)##\(.*\)/\1\3/p' \
 	| column -t  -s ' '
 
@@ -80,7 +80,7 @@ oci: ## 🏗️ Setup oci-cli
 	--build-arg BUILD_DATE=$(BUILD_DATE) \
 	--build-arg VERSION=$(VERSION) \
 	--build-arg REVISION=$(REVISION) \
-	--no-cache=true -t oci -f oci-cli_dockerfile . 
+--no-cache=true -t oci -f oci-cli_containerfile . 
 
 oci-proxy: ## 🌐 Setup oci-cli-by-proxy
 	@echo "Create oci-cli container..."
@@ -97,7 +97,7 @@ oci-proxy: ## 🌐 Setup oci-cli-by-proxy
 	--build-arg BUILD_DATE=$(BUILD_DATE) \
 	--build-arg VERSION=$(VERSION) \
 	--build-arg REVISION=$(REVISION) \
-	--no-cache=true -t oci -f oci-cli_dockerfile . 
+--no-cache=true -t oci -f oci-cli_containerfile . 
 
 oci-cleanup: ## 🧹 Cleanup oci-cli
 	@echo "Cleanup oci-cli container image..."

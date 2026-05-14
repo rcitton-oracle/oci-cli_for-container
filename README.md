@@ -1,47 +1,86 @@
-# oci-cli for Docker/Podman container
+# OCI CLI Container 🚀
 
-oci-cli - [Command Line Interface for Oracle Cloud Infrastructure](https://github.com/oracle/oci-cli) Docker/Podman container setup
+Run the [Oracle Cloud Infrastructure CLI](https://github.com/oracle/oci-cli) from a Docker or Podman container, without installing `oci-cli` directly on your host.
 
-## How to build
+## ✨ What You Get
 
-A makefile is available with following entries:
+| Feature | Details |
+| --- | --- |
+| 🧰 OCI CLI included | Builds a local image with `oci-cli` installed |
+| 🐳 Docker/Podman support | Choose your runtime from `env.mk` |
+| 🔐 Host OCI config | Reuses your local `$HOME/.oci` configuration |
+| 🌐 Proxy build option | Use `make oci-proxy` when a proxy is required |
 
-* '**oci**': it will setup oci-cli in a container
-* '**oci-proxy**': it will setup oci-cli in a container through a proxy
-* '**oci-cleanup**': it will cleanup the environment dropping the oci-cli image
-* '**oci-update**': it will update oci-cli image
+## 📦 Project Files
 
-You can specify the usage of docker or podman from '**env.mk**'. From the same file you can set the proxy if required
+| File | Purpose |
+| --- | --- |
+| `oci-cli_containerfile` | Container build recipe |
+| `Makefile` | Build, update, and cleanup commands |
+| `env.mk` | Runtime, version, revision, and proxy settings |
 
-## Usage
+## 🛠️ Make Targets
 
-1. Edit '**env.mk**' to set docker or podman usage
-2. Run '**make oci**' 
-3. Add following alias on yours '**.bashrc**':
+| Command | Description |
+| --- | --- |
+| `make oci` | 🏗️ Build the OCI CLI container image |
+| `make oci-proxy` | 🌐 Build the image using `HTTP_PROXY` from `env.mk` |
+| `make oci-cleanup` | 🧹 Remove the local OCI CLI image |
+| `make oci-update` | 🔄 Rebuild the image from scratch |
 
-    if you use podman:
+## 🚀 Quick Start
 
-        alias oci='podman run --rm -it --userns=keep-id -v "$HOME/.oci:$HOME/.oci:z" --tmpfs /run --tmpfs /tmp oci'
+1. Edit `env.mk` and select your runtime:
 
-    if you use docker:
+   ```make
+   RUNTIMECT=$(PODMAN)
+   # RUNTIMECT=$(DOCKER)
+   ```
 
-        alias oci='docker run --rm -it -v "$HOME/.oci:$HOME/.oci" -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /run --tmpfs oci'
+2. Build the image:
 
+   ```bash
+   make oci
+   ```
 
-You can now execute oci-cli commands, example:
+   If you need a proxy, set `HTTP_PROXY` in `env.mk` and run:
 
-    $ oci os ns get
-    {
-     "data": "mytenancy"
-    }
+   ```bash
+   make oci-proxy
+   ```
 
-> **_NOTE:_**  the oci-cli configuration is stored on host under  "**$HOME/.oci**"
+3. Add an `oci` alias to your shell profile.
 
+   For Podman:
 
-## Author
+   ```bash
+   alias oci='podman run --rm -it --userns=keep-id -v "$HOME/.oci:$HOME/.oci:z" --tmpfs /run --tmpfs /tmp oci'
+   ```
+
+   For Docker:
+
+   ```bash
+   alias oci='docker run --rm -it -v "$HOME/.oci:$HOME/.oci" -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /run --tmpfs /tmp oci'
+   ```
+
+## ✅ Example
+
+```bash
+oci os ns get
+```
+
+```json
+{
+  "data": "mytenancy"
+}
+```
+
+> 💡 Your OCI CLI configuration stays on the host under `$HOME/.oci`.
+
+## 👤 Author
 
 Ruggero Citton
 
-## License
+## 📄 License
 
 MIT License

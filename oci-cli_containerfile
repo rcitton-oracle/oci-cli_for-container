@@ -49,6 +49,9 @@ LABEL \
   created=$BUILD_DATE
 
 ENV PIP_ROOT_USER_ACTION=ignore \
+    HOME=/home/$USER_NAME \
+    HTTP_PROXY=$HTTP_PROXY \
+    HTTPS_PROXY=$HTTP_PROXY \
     http_proxy=$HTTP_PROXY \
     https_proxy=$HTTP_PROXY
 
@@ -70,7 +73,7 @@ RUN groupadd -g "$GROUP_ID" "$USER_NAME" ; \
 
 
 # --------------------------------------------------------
-WORKDIR /$USER_NAME
+WORKDIR /home/$USER_NAME
 USER $USER_NAME
 
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
